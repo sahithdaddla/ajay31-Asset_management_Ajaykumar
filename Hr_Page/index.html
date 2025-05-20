@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Asset Requests</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #2d3436;
+            line-height: 1.6;
+            background-color: #ffffff;
+        }
+        header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #f8f9fa;
+            text-align: center;
+            padding: 20px 20px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: #6c5ce7;
+        }
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .request-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .request-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .request-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3436;
+        }
+        .request-status {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-pending {
+            background: rgba(253, 203, 110, 0.2);
+            color: #e17055;
+        }
+        .status-approved {
+            background: rgba(0, 184, 148, 0.2);
+            color: #00b894;
+        }
+        .status-rejected {
+            background: rgba(214, 48, 49, 0.2);
+            color: #d63031;
+        }
+        .asset-info {
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .asset-info i {
+            color: #6c5ce7;
+            margin-top: 3px;
+        }
+        .asset-detail {
+            display: flex;
+        }
+        .asset-label {
+            min-width: 100px;
+            color: #666;
+            font-weight: 500;
+        }
+        .asset-value {
+            font-weight: 500;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+        }
+        .btn-approve {
+            background: #00b894;
+            color: white;
+        }
+        .btn-approve:hover {
+            background: #55efc4;
+        }
+        .btn-reject {
+            background: #d63031;
+            color: white;
+        }
+        .btn-reject:hover {
+            background: #ff7675;
+        }
+        @media (max-width: 768px) {
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            header p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HR Asset Requests</h1>
+        <p>Manage and review employee asset requests</p>
+    </header>
+    <div class="container">
+        <div class="requests-section">
+            <h2 class="section-title">
+                <i class="fas fa-file-alt"></i>
+                Asset Requests
+            </h2>
+            <div id="requests-container" class="requests-grid"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Retry fetch with delay
+            async function fetchWithRetry(url, options, retries = 5, delay = 2000) {
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const response = await fetch(url, options);
+                        if (!response.ok) {
+                            let errorMessage = `HTTP ${response.status}`;
+                            if (response.status === 404) {
+                                errorMessage = 'API endpoint not found. Ensure the server is running on http://localhost:3000.';
+                            }
+                            throw new Error(errorMessage);
+                        }
+                        return response;
+                    } catch (err) {
+                        if (i < retries - 1) {
+                            console.warn(`Fetch attempt ${i + 1} failed: ${err.message}. Retrying...`);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            continue;
+                        }
+                        throw err;
+                    }
+                }
+            }
+
+            // Check server health
+            async function checkServerHealth() {
+                try {
+                    const response = await fetchWithRetry('http://localhost:3000/health', {}, 3, 1000);
+                    await response.json();
+                    return true;
+                } catch (err) {
+                    console.error('Server health check failed:', err.message);
+                    return false;
+                }
+            }
+
+            // Update request status
+            async function updateStatus(id, status) {
+                if (!confirm(`${status} this request?`)) {
+                    return;
+                }
+                try {
+                    const healthOk = await checkServerHealth();
+                    if (!healthOk) {
+                        throw new Error('Server is not responding on http://localhost:3000.');
+                    }
+                    const response = await fetchWithRetry(`http://localhost:3000/api/requests/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status })
+                    });
+                    await response.json();
+                    alert(`Request ${status} successfully!`);
+                    displayRequests();
+                } catch (err) {
+                    console.error('Update error:', err.message);
+                    alert(`Error: ${err.message}`);
+                }
+            }
+
+            // Fetch and display requests
+            async function displayRequests() {
+                try {
+                    const healthOk = await checkServerHealth();
+                    if (!healthOk) {
+                        throw new Error('Server is not responding on http://localhost:3000.');
+                    }
+                    const response = await fetchWithRetry('http://localhost:3000/api/requests');
+                    const requests = await response.json();
+                    const container = document.getElementById('requests-container');
+                    container.innerHTML = '';
+                    if (requests.length === 0) {
+                        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">No requests found</p>';
+                        return;
+                    }
+                    requests.forEach(request => {
+                        const statusClass = getStatusClass(request.status);
+                        const card = document.createElement('div');
+                        card.classList.add('request-card');
+                        card.innerHTML = `
+                            <div class="request-header">
+                                <h3 class="request-title">${request.asset_type}</h3>
+                                <span class="request-status ${statusClass}">${request.status}</span>
+                            </div>
+                            <div class="asset-info">
+                                <i class="fas fa-id-badge"></i>
+                                <div class="asset-detail">
+                                    <span class="asset-label">Employee ID</span>
+                                    <span class="asset-value">${request.employee_id}</span>
+                                </div>
+                            </div>
+                            <div class="asset-info">
+                                <i class="fas fa-user"></i>
+                                <div class="asset-detail">
+                                    <span class="asset-label">Employee</span>
+                                    <span class="asset-value">${request.employee_name}</span>
+                                </div>
+                            </div>
+                            <div class="asset-info">
+                                <i class="fas fa-envelope"></i>
+                                <div class="asset-detail">
+                                    <span class="asset-label">Email</span>
+                                    <span class="asset-value">${request.email}</span>
+                                </div>
+                            </div>
+                            <div class="asset-info">
+                                <i class="fas fa-laptop"></i>
+                                <div class="asset-detail">
+                                    <span class="asset-label">Asset</span>
+                                    <span class="asset-value">${request.asset_name}</span>
+                                </div>
+                            </div>
+                            <div class="asset-info">
+                                <i class="fas fa-info-circle"></i>
+                                <div class="asset-detail">
+                                    <span class="asset-label">Details</span>
+                                    <span class="asset-value">${request.details}</span>
+                                </div>
+                            </div>
+                            <div class="asset-info">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div class="asset-detail">
+                                    <span class="asset-label">Request Date</span>
+                                    <span class="asset-value">${request.request_date}</span>
+                                </div>
+                            </div>
+                            ${request.status === 'Pending' ? `
+                            <div class="action-buttons">
+                                <button class="btn btn-approve" data-id="${request.id}" data-status="Approved">Approve</button>
+                                <button class="btn btn-reject" data-id="${request.id}" data-status="Rejected">Reject</button>
+                            </div>
+                            ` : ''}
+                        `;
+                        container.appendChild(card);
+                    });
+
+                    // Attach event listeners to buttons
+                    document.querySelectorAll('.btn-approve').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const id = button.getAttribute('data-id');
+                            const status = button.getAttribute('data-status');
+                            updateStatus(id, status);
+                        });
+                    });
+                    document.querySelectorAll('.btn-reject').forEach(button => {
+                        button.addEventListener('click', () => {
+                            const id = button.getAttribute('data-id');
+                            const status = button.getAttribute('data-status');
+                            updateStatus(id, status);
+                        });
+                    });
+                } catch (err) {
+                    console.error('Fetch error:', err.message);
+                    document.getElementById('requests-container').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #666;">Error: ${err.message}</p>`;
+                }
+            }
+
+            function getStatusClass(status) {
+                switch (status.toLowerCase()) {
+                    case 'pending': return 'status-pending';
+                    case 'approved': return 'status-approved';
+                    case 'rejected': return 'status-rejected';
+                    default: return '';
+                }
+            }
+
+            // Initial load and periodic refresh
+            setTimeout(displayRequests, 150);
+            setInterval(displayRequests, 30000); // Refresh every 30 seconds
+        });
+    </script>
+</body>
+</html>

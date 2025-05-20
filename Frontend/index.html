@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Asset Request</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family:Arial, Helvetica, sans-serif;
+            color: #2d3436;
+            line-height: 1.6;
+            background-color: #ffffff;
+        }
+        header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #f8f9fa;
+            text-align: center;
+            padding: 20px 20px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .form-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+        .form-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #2f1ace;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #2d3436;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #6c5ce7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+        textarea.form-control {
+            min-height: 100px;
+            resize: none;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, #00b894, #55efc4);
+            color: white;
+        }
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #55efc4, #00b894);
+        }
+        .error-message {
+            color: red;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+        .requests-section {
+            margin: 40px 0;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title i {
+            color: #1b106f;
+        }
+        .allocated-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .request-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .request-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .request-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3436;
+        }
+        .request-status {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        .status-approved {
+            background: rgba(0, 184, 148, 0.2);
+            color: #00b894;
+        }
+        .asset-info {
+            display: grid;
+            grid-template-columns: 30px 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .asset-info i {
+            color: #6c5ce7;
+            margin-top: 3px;
+        }
+        .asset-detail {
+            display: flex;
+        }
+        .asset-label {
+            min-width: 100px;
+            color: #666;
+            font-weight: 500;
+        }
+        .asset-value {
+            font-weight: 500;
+        }
+        .request-list {
+            margin-bottom: 40px;
+        }
+        .request-item {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        .request-details {
+            flex: 1;
+        }
+        .request-details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+        .status-pending {
+            background: rgba(253, 203, 110, 0.2);
+            color: #e17055;
+        }
+        .status-rejected {
+            background: rgba(214, 48, 49, 0.2);
+            color: #d63031;
+        }
+        @media (max-width: 768px) {
+            .allocated-grid {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 1.8rem;
+            }
+            header p {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 15px;
+            }
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Employee Asset Request</h1>
+        <p>Submit and track your asset requests</p>
+    </header>
+    <div class="container">
+        <div class="form-container">
+            <h2 class="form-title">Request New Asset</h2>
+            <form id="asset-request-form">
+                <div class="form-group">
+                    <label for="employeeId" class="form-label">Employee ID</label>
+                    <input type="text" id="employeeId" class="form-control" required minlength="7" maxlength="7"
+                           pattern="^[ATS]{3}0(?!000)[0-9]{3}$"
+                           title="Employee ID must be alphanumeric, 3-50 characters.">
+                    <p id="employeeId-error" class="error-message">Invalid Employee ID.</p>
+                </div>
+                <div class="form-group">
+                    <label for="employeeName" class="form-label">Employee Name</label>
+                    <input type="text" id="employeeName" class="form-control" required minlength="3" maxlength="100"
+                           pattern="^[A-Za-z]+(?:\.[A-Za-z]+)*(?: [A-Za-z]+)*(?:\.[A-Za-z]+){0,3}$"
+                           title="Name must be letters, spaces, or dots, 3-100 characters.">
+                    <p id="employeeName-error" class="error-message">Invalid employee name.</p>
+                </div>
+                <div class="form-group">
+                    <label for="emp-email" class="form-label">Email Address</label>
+                    <input type="email" id="emp-email" class="form-control" required minlength="8" maxlength="50"
+                           title="Please enter a valid email address.">
+                    <p id="emp-email-error" class="error-message">Invalid email address.</p>
+                </div>
+                <div class="form-group">
+                    <label for="request-date" class="form-label">Date of Request</label>
+                    <input type="date" id="request-date" class="form-control" required>
+                    <p id="request-date-error" class="error-message">Invalid request date.</p>
+                </div>
+                <div class="form-group">
+                    <label for="asset-type" class="form-label">Asset Type</label>
+                    <select id="asset-type" class="form-control" required>
+                        <option value="">Select Asset Type</option>
+                        <option value="Laptop">Laptop</option>
+                        <option value="Office Supplies">Office Supplies</option>
+                        <option value="Training Program">Training Program</option>
+                        <option value="Project">Project</option>
+                        <option value="Bonus">Bonus</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <p id="asset-type-error" class="error-message">Please select an asset type.</p>
+                </div>
+                <div class="form-group">
+                    <label for="asset-name" class="form-label">Asset Name</label>
+                    <input type="text" id="asset-name" class="form-control" required minlength="2" maxlength="40"
+                           pattern="^[A-Za-z]+(?:\.[A-Za-z]+)*(?: [A-Za-z]+)*(?:\.[A-Za-z]+){0,3}$"
+                           title="Asset name must be letters, spaces, or dots, 2-40 characters.">
+                    <p id="asset-name-error" class="error-message">Invalid asset name.</p>
+                </div>
+                <div class="form-group">
+                    <label for="asset-details" class="form-label">Additional Details</label>
+                    <textarea id="asset-details" class="form-control" required minlength="3" maxlength="100"></textarea>
+                    <p id="asset-details-error" class="error-message">Invalid input.</p>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">Submit Request</button>
+                </div>
+            </form>
+        </div>
+        <div class="requests-section">
+            <h2 class="section-title">
+                <i class="fas fa-file-alt"></i>
+                My Requests
+            </h2>
+            <div id="allocated-container" class="allocated-grid"></div>
+            <div id="requested-container" class="request-list"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize date input constraints
+            const requestDateInput = document.getElementById("request-date");
+            const today = new Date();
+            const oneYearFromNow = new Date();
+            oneYearFromNow.setFullYear(today.getFullYear() + 1);
+            const formatDate = (date) => date.toISOString().split('T')[0];
+            requestDateInput.min = formatDate(today);
+            requestDateInput.max = formatDate(oneYearFromNow);
+
+            // Add input event listeners for real-time validation
+            document.getElementById("employeeId").addEventListener("input", validateEmployeeId);
+            document.getElementById("employeeName").addEventListener("input", validateEmployeeName);
+            document.getElementById("emp-email").addEventListener("input", validateEmail);
+            document.getElementById("request-date").addEventListener("input", validateRequestDate);
+            document.getElementById("asset-type").addEventListener("change", validateAssetType);
+            document.getElementById("asset-name").addEventListener("input", validateAssetName);
+            document.getElementById("asset-details").addEventListener("input", validateAssetDetails);
+
+            // Retry fetch with delay
+            async function fetchWithRetry(url, options, retries = 5, delay = 2000) {
+                for (let i = 0; i < retries; i++) {
+                    try {
+                        const response = await fetch(url, options);
+                        if (!response.ok) {
+                            let errorMessage = `HTTP ${response.status}`;
+                            if (response.status === 404) {
+                                errorMessage = 'API endpoint not found. Ensure the server is running on http://localhost:3000.';
+                            }
+                            throw new Error(errorMessage);
+                        }
+                        return response;
+                    } catch (err) {
+                        if (i < retries - 1) {
+                            console.warn(`Fetch attempt ${i + 1} failed: ${err.message}. Retrying...`);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            continue;
+                        }
+                        throw err;
+                    }
+                }
+            }
+
+            // Check server health
+            async function checkServerHealth() {
+                try {
+                    const response = await fetchWithRetry('http://localhost:3000/health', {}, 3, 1000);
+                    await response.json();
+                    return true;
+                } catch (err) {
+                    console.error('Server health check failed:', err.message);
+                    return false;
+                }
+            }
+
+            // Form submission handler
+            document.getElementById('asset-request-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                if (
+                    !validateEmployeeId() ||
+                    !validateEmployeeName() ||
+                    !validateEmail() ||
+                    !validateRequestDate() ||
+                    !validateAssetType() ||
+                    !validateAssetName() ||
+                    !validateAssetDetails()
+                ) {
+                    alert('Please correct the errors in the form before submitting.');
+                    return;
+                }
+                if (!confirm('Submit this asset request?')) {
+                    return;
+                }
+                const requestData = {
+                    employeeId: document.getElementById('employeeId').value,
+                    employeeName: document.getElementById('employeeName').value,
+                    email: document.getElementById('emp-email').value,
+                    requestDate: document.getElementById('request-date').value,
+                    assetType: document.getElementById('asset-type').value,
+                    assetName: document.getElementById('asset-name').value,
+                    details: document.getElementById('asset-details').value
+                };
+                try {
+                    const healthOk = await checkServerHealth();
+                    if (!healthOk) {
+                        throw new Error('Server is not responding on http://localhost:3000.');
+                    }
+                    const response = await fetchWithRetry('http://localhost:3000/api/requests', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestData)
+                    });
+                    await response.json();
+                    alert('Asset Request Submitted Successfully!');
+                    document.getElementById('asset-request-form').reset();
+                    displayRequests();
+                } catch (err) {
+                    console.error('Submission error:', err.message);
+                    alert(`Error: ${err.message}`);
+                }
+            });
+
+            // Fetch and display requests
+            async function displayRequests() {
+                try {
+                    const healthOk = await checkServerHealth();
+                    if (!healthOk) {
+                        throw new Error('Server is not responding on http://localhost:3000.');
+                    }
+                    const response = await fetchWithRetry('http://localhost:3000/api/requests');
+                    const requests = await response.json();
+                    const allocatedContainer = document.getElementById('allocated-container');
+                    const requestedContainer = document.getElementById('requested-container');
+                    allocatedContainer.innerHTML = '';
+                    requestedContainer.innerHTML = '';
+                    if (requests.length === 0) {
+                        requestedContainer.innerHTML = '<p style="text-align: center; color: #666;">No requests found</p>';
+                        return;
+                    }
+                    requests.forEach(request => {
+                        const statusClass = getStatusClass(request.status);
+                        if (request.status === 'Approved') {
+                            const card = document.createElement('div');
+                            card.classList.add('request-card');
+                            card.innerHTML = `
+                                <div class="request-header">
+                                    <h3 class="request-title">${request.asset_type}</h3>
+                                    <span class="request-status ${statusClass}">Allocated</span>
+                                </div>
+                                <div class="asset-info">
+                                    <i class="fas fa-id-badge"></i>
+                                    <div class="asset-detail">
+                                        <span class="asset-label">Employee ID</span>
+                                        <span class="asset-value">${request.employee_id}</span>
+                                    </div>
+                                </div>
+                                <div class="asset-info">
+                                    <i class="fas fa-user"></i>
+                                    <div class="asset-detail">
+                                        <span class="asset-label">Employee</span>
+                                        <span class="asset-value">${request.employee_name}</span>
+                                    </div>
+                                </div>
+                                <div class="asset-info">
+                                    <i class="fas fa-envelope"></i>
+                                    <div class="asset-detail">
+                                        <span class="asset-label">Email</span>
+                                        <span class="asset-value">${request.email}</span>
+                                    </div>
+                                </div>
+                                <div class="asset-info">
+                                    <i class="fas fa-laptop"></i>
+                                    <div class="asset-detail">
+                                        <span class="asset-label">Asset</span>
+                                        <span class="asset-value">${request.asset_name}</span>
+                                    </div>
+                                </div>
+                                <div class="asset-info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <div class="asset-detail">
+                                        <span class="asset-label">Details</span>
+                                        <span class="asset-value">${request.details}</span>
+                                    </div>
+                                </div>
+                                <div class="asset-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <div class="asset-detail">
+                                        <span class="asset-label">Request Date</span>
+                                        <span class="asset-value">${request.request_date}</span>
+                                    </div>
+                                </div>
+                            `;
+                            allocatedContainer.appendChild(card);
+                        } else {
+                            const item = document.createElement('div');
+                            item.classList.add('request-item');
+                            item.innerHTML = `
+                                <div class="request-details">
+                                    <p><strong>Asset:</strong> ${request.asset_type} - ${request.asset_name}</p>
+                                    <p><strong>Employee ID:</strong> ${request.employee_id}</p>
+                                    <p><strong>Employee:</strong> ${request.employee_name}</p>
+                                    <p><strong>Email:</strong> ${request.email}</p>
+                                    <p><strong>Details:</strong> ${request.details}</p>
+                                    <p><strong>Date:</strong> ${request.request_date}</p>
+                                </div>
+                                <span class="request-status ${statusClass}">${request.status}</span>
+                            `;
+                            requestedContainer.appendChild(item);
+                        }
+                    });
+                } catch (err) {
+                    console.error('Fetch error:', err.message);
+                    document.getElementById('requested-container').innerHTML = `<p style="text-align: center; color: #666;">Error: ${err.message}</p>`;
+                }
+            }
+
+            // Validation functions
+            function validateEmployeeId() {
+                const input = document.getElementById("employeeId");
+                const errorMessage = document.getElementById("employeeId-error");
+                const value = input.value.trim();
+                const regex =  /^[ATS]{3}0(?!000)[0-9]{3}$/;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Employee ID is required.';
+                    input.setCustomValidity('Employee ID is required.');
+                    return false;
+                } else if (!regex.test(value)) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Employee ID must be alphanumeric.';
+                    input.setCustomValidity('Invalid Employee ID.');
+                    return false;
+                } else if (value.length < 3 || value.length > 50) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Employee ID must be 3-50 characters.';
+                    input.setCustomValidity('Invalid length.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    input.setCustomValidity('');
+                    return true;
+                }
+            }
+            function validateEmployeeName() {
+                const input = document.getElementById("employeeName");
+                const errorMessage = document.getElementById("employeeName-error");
+                const value = input.value.trim();
+                const regex = /^[A-Za-z]+(?:\.[A-Za-z]+)*(?: [A-Za-z]+)*(?:\.[A-Za-z]+){0,3}$/;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Employee name is required.';
+                    input.setCustomValidity('Employee name is required.');
+                    return false;
+                } else if (!regex.test(value)) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Name must be letters, spaces, or dots.';
+                    input.setCustomValidity('Invalid name format.');
+                    return false;
+                } else if (value.length < 3 || value.length > 100) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Name must be 3-100 characters.';
+                    input.setCustomValidity('Invalid length.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    input.setCustomValidity('');
+                    return true;
+                }
+            }
+            function validateEmail() {
+                const input = document.getElementById("emp-email");
+                const errorMessage = document.getElementById("emp-email-error");
+                const value = input.value.trim();
+                const emailPattern = /^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,3}$/;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Email is required.';
+                    input.setCustomValidity('Email is required.');
+                    return false;
+                } else if (!emailPattern.test(value)) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Invalid email format.';
+                    input.setCustomValidity('Invalid email format.');
+                    return false;
+                } else if (value.length < 8 || value.length > 50) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Email must be 8-50 characters.';
+                    input.setCustomValidity('Invalid length.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    input.setCustomValidity('');
+                    return true;
+                }
+            }
+            function validateRequestDate() {
+                const input = document.getElementById("request-date");
+                const errorMessage = document.getElementById("request-date-error");
+                const value = input.value;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Request date is required.';
+                    input.setCustomValidity('Request date is required.');
+                    return false;
+                }
+                const selectedDate = new Date(value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const oneYearFromNow = new Date();
+                oneYearFromNow.setFullYear(today.getFullYear() + 1);
+                if (selectedDate < today) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Date cannot be in the past.';
+                    input.setCustomValidity('Invalid date.');
+                    return false;
+                } else if (selectedDate > oneYearFromNow) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Date cannot be more than 1 year from now.';
+                    input.setCustomValidity('Invalid date.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    input.setCustomValidity('');
+                    return true;
+                }
+            }
+            function validateAssetType() {
+                const input = document.getElementById("asset-type");
+                const errorMessage = document.getElementById("asset-type-error");
+                const value = input.value;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Please select an asset type.';
+                    input.setCustomValidity('Asset type is required.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    input.setCustomValidity('');
+                    return true;
+                }
+            }
+            function validateAssetName() {
+                const input = document.getElementById("asset-name");
+                const errorMessage = document.getElementById("asset-name-error");
+                const value = input.value.trim();
+                const pattern = /^[A-Za-z]+(?:\.[A-Za-z]+)*(?: [A-Za-z]+)*(?:\.[A-Za-z]+){0,3}$/;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Asset name is required.';
+                    input.setCustomValidity('Asset name is required.');
+                    return false;
+                } else if (!pattern.test(value)) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Asset name must be letters, spaces, or dots.';
+                    input.setCustomValidity('Invalid format.');
+                    return false;
+                } else if (value.length < 2 || value.length > 40) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Asset name must be 2-40 characters.';
+                    input.setCustomValidity('Invalid length.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    input.setCustomValidity('');
+                    return true;
+                }
+            }
+            function validateAssetDetails() {
+                const textarea = document.getElementById("asset-details");
+                const errorMessage = document.getElementById("asset-details-error");
+                const value = textarea.value.trim();
+                const regex = /^[A-Za-z][A-Za-z0-9\s,.]*$/;
+                if (!value) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Asset details are required.';
+                    textarea.setCustomValidity('Details are required.');
+                    return false;
+                } else if (!regex.test(value)) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Must start with a letter. Only letters, numbers, spaces, commas, periods allowed.';
+                    textarea.setCustomValidity('Invalid characters.');
+                    return false;
+                } else if (value.length < 3 || value.length > 100) {
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = 'Details must be 3-100 characters.';
+                    textarea.setCustomValidity('Invalid length.');
+                    return false;
+                } else {
+                    errorMessage.style.display = 'none';
+                    textarea.setCustomValidity('');
+                    return true;
+                }
+            }
+            function getStatusClass(status) {
+                switch (status.toLowerCase()) {
+                    case 'pending': return 'status-pending';
+                    case 'approved': return 'status-approved';
+                    case 'rejected': return 'status-rejected';
+                    default: return '';
+                }
+            }
+
+            // Initial load and periodic refresh
+            setTimeout(displayRequests, 150);
+            setInterval(displayRequests, 30000); // Refresh every 30 seconds
+        });
+    </script>
+</body>
+</html>
