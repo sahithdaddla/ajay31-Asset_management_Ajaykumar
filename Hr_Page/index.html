@@ -3,354 +3,1044 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Asset Requests</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <title>HR Asset Requests Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6a0572;
+            --primary-light: #9c27b0;
+            --secondary: #c71585;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --gray: #718096;
+            --success: #48bb78;
+            --success-light: #c6f6d5;
+            --warning: #ed8936;
+            --warning-light: #feebc8;
+            --danger: #f56565;
+            --danger-light: #fed7d7;
+            --info: #4299e1;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            color: #2d3436;
+            font-family: 'Inter', sans-serif;
+            color: var(--dark);
             line-height: 1.6;
             background-color: #ffffff;
         }
+
         header {
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #f8f9fa;
+            position: relative;
             text-align: center;
-            padding: 20px 20px;
-            border-radius: 0 0 16px 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            height: 140px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #f8f9fa;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
             margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px;
         }
+
         header h1 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 10px;
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            z-index: 2;
         }
+
         header p {
-            font-size: 1rem;
+            font-weight: 300;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            max-width: 700px;
             opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto;
+            z-index: 2;
         }
+
+        @keyframes moveCircles {
+            0% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-50%) translateX(-50%); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        .banner-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .circle {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: moveCircles 10s infinite linear;
+        }
+
+        .circle:nth-child(1) {
+            top: 10%;
+            left: 20%;
+            animation-duration: 8s;
+        }
+
+        .circle:nth-child(2) {
+            top: 50%;
+            left: 70%;
+            animation-duration: 12s;
+        }
+
+        .circle:nth-child(3) {
+            top: 80%;
+            left: 40%;
+            animation-duration: 15s;
+        }
+
         .container {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 1.5rem;
         }
+
+        .filter-search {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(106, 5, 114, 0.2);
+        }
+
         .section-title {
             font-size: 1.8rem;
             font-weight: 600;
-            color: #2d3436;
+            color: var(--primary);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .section-title i {
-            color: #6c5ce7;
+            color: var(--primary-light);
         }
-        .requests-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
+
+        .requests-table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
             margin-bottom: 40px;
         }
-        .request-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            padding: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
+
+        .table-responsive {
+            overflow-x: auto;
         }
-        .request-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .request-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
+
+        th, td {
+            padding: 15px;
+            text-align: left;
             border-bottom: 1px solid #eee;
         }
-        .request-title {
-            font-size: 1.2rem;
+
+        th {
+            background-color: #f8f9fa;
             font-weight: 600;
-            color: #2d3436;
+            color: var(--dark);
+            position: sticky;
+            top: 0;
         }
-        .request-status {
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status-badge {
             padding: 6px 12px;
             border-radius: 16px;
             font-size: 0.85rem;
             font-weight: 600;
             text-transform: capitalize;
+            display: inline-block;
         }
+
         .status-pending {
-            background: rgba(253, 203, 110, 0.2);
-            color: #e17055;
+            background: var(--warning-light);
+            color: var(--warning);
         }
+
         .status-approved {
-            background: rgba(0, 184, 148, 0.2);
-            color: #00b894;
+            background: var(--success-light);
+            color: var(--success);
         }
+
         .status-rejected {
-            background: rgba(214, 48, 49, 0.2);
-            color: #d63031;
+            background: var(--danger-light);
+            color: var(--danger);
         }
-        .asset-info {
-            display: grid;
-            grid-template-columns: 30px 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .asset-info i {
-            color: #6c5ce7;
-            margin-top: 3px;
-        }
-        .asset-detail {
-            display: flex;
-        }
-        .asset-label {
-            min-width: 100px;
-            color: #666;
-            font-weight: 500;
-        }
-        .asset-value {
-            font-weight: 500;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border-radius: 8px;
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: var(--border-radius);
             font-weight: 500;
             cursor: pointer;
             border: none;
-            transition: background 0.3s;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            margin-right: 5px;
         }
+
+        .btn-view {
+            background: var(--info);
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #3182ce;
+        }
+
         .btn-approve {
-            background: #00b894;
+            background: var(--success);
             color: white;
         }
+
         .btn-approve:hover {
-            background: #55efc4;
+            background: #38a169;
         }
+
         .btn-reject {
-            background: #d63031;
+            background: var(--danger);
             color: white;
         }
+
         .btn-reject:hover {
-            background: #ff7675;
+            background: #e53e3e;
         }
+
+        .truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+            display: inline-block;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 15px;
+        }
+
+        .detail-label {
+            min-width: 150px;
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        .detail-value {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            position: sticky;
+            bottom: 0;
+            background: white;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-cancel {
+            background: var(--gray);
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #718096;
+        }
+
+        /* Success/Error Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: var(--success);
+        }
+
+        .toast-error {
+            background: var(--danger);
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+
+        .page-btn {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
         @media (max-width: 768px) {
-            .requests-grid {
-                grid-template-columns: 1fr;
-            }
             header h1 {
                 font-size: 1.8rem;
             }
+
             header p {
                 font-size: 0.9rem;
+            }
+
+            .filter-search {
+                flex-direction: column;
+            }
+
+            .modal {
+                width: 95%;
+            }
+
+            th, td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+
+            .action-btn {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+
+            .detail-row {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                margin-bottom: 5px;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-footer {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>HR Asset Requests</h1>
-        <p>Manage and review employee asset requests</p>
-    </header>
     <div class="container">
+        <header>
+            <div class="banner-background">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+            </div>
+            <h1>HR Asset Requests Management</h1>
+            <p>Review and manage employee asset requests efficiently</p>
+        </header>
+
+        <div class="filter-search">
+            <div class="form-group">
+                <label for="statusFilter" class="form-label">Filter by Status</label>
+                <select id="statusFilter" class="form-control">
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Approved">Approved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="assetTypeFilter" class="form-label">Filter by Asset Type</label>
+                <select id="assetTypeFilter" class="form-control">
+                    <option value="">All Asset Types</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="Office Supplies">Office Supplies</option>
+                    <option value="Training Program">Training Program</option>
+                    <option value="Project">Project</option>
+                    <option value="Bonus">Bonus</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="searchInput" class="form-label">Search</label>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by ID, Name, or Asset">
+            </div>
+        </div>
+
         <div class="requests-section">
             <h2 class="section-title">
                 <i class="fas fa-file-alt"></i>
                 Asset Requests
             </h2>
-            <div id="requests-container" class="requests-grid"></div>
+            <div class="requests-table-container">
+                <div class="table-responsive">
+                    <table id="requests-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Employee</th>
+                                <th>Asset Type</th>
+                                <th>Asset Name</th>
+                                <th>Request Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-container">
+                            <!-- Requests will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- View Details Modal -->
+    <div id="viewModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-file-alt"></i>
+                    Request Details
+                </h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- Details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <div class="modal-actions" id="viewModalActions">
+                    <!-- Approve/Reject buttons will be added here for pending requests -->
+                </div>
+                <button class="btn btn-cancel close-view-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">
+                    <i class="fas fa-question-circle"></i>
+                    Confirm Action
+                </h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-message" id="modalMessage">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn" id="confirmActionBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success message here</span>
+    </div>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Retry fetch with delay
-            async function fetchWithRetry(url, options, retries = 5, delay = 2000) {
-                for (let i = 0; i < retries; i++) {
-                    try {
-                        const response = await fetch(url, options);
-                        if (!response.ok) {
-                            let errorMessage = `HTTP ${response.status}`;
-                            if (response.status === 404) {
-                                errorMessage = 'API endpoint not found. Ensure the server is running on http://localhost:3000.';
-                            }
-                            throw new Error(errorMessage);
-                        }
-                        return response;
-                    } catch (err) {
-                        if (i < retries - 1) {
-                            console.warn(`Fetch attempt ${i + 1} failed: ${err.message}. Retrying...`);
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            continue;
-                        }
-                        throw err;
-                    }
-                }
+      const ASSET_API = 'http://localhost:3000/api/requests';
+let currentRequestId = null;
+let currentAction = null;
+let currentPage = 1;
+const itemsPerPage = 10;
+let allRequests = [];
+
+// DOM Elements
+const confirmationModal = document.getElementById('confirmationModal');
+const viewModal = document.getElementById('viewModal');
+const viewModalBody = document.getElementById('viewModalBody');
+const viewModalActions = document.getElementById('viewModalActions');
+const modalTitle = document.getElementById('modalTitle');
+const modalMessage = document.getElementById('modalMessage');
+const confirmActionBtn = document.getElementById('confirmActionBtn');
+const modalCloseButtons = document.querySelectorAll('.modal-close, .btn-cancel');
+const closeViewModalBtn = document.querySelector('.close-view-modal');
+const toast = document.getElementById('toast');
+const toastMessage = document.getElementById('toastMessage');
+const pagination = document.getElementById('pagination');
+const statusFilter = document.getElementById('statusFilter');
+const assetTypeFilter = document.getElementById('assetTypeFilter');
+const searchInput = document.getElementById('searchInput');
+const requestsContainer = document.getElementById('requests-container');
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing HR Asset Requests Management...');
+    fetchRequests();
+    setupEventListeners();
+});
+
+function setupEventListeners() {
+    // Filter and search events
+    statusFilter.addEventListener('change', () => {
+        currentPage = 1;
+        displayRequests();
+    });
+    assetTypeFilter.addEventListener('change', () => {
+        currentPage = 1;
+        displayRequests();
+    });
+    searchInput.addEventListener('input', () => {
+        currentPage = 1;
+        clearTimeout(window.searchTimeout);
+        window.searchTimeout = setTimeout(displayRequests, 300);
+    });
+
+    // Modal events
+    modalCloseButtons.forEach(btn => {
+        btn.addEventListener('click', closeModal);
+    });
+    
+    closeViewModalBtn.addEventListener('click', () => {
+        viewModal.classList.remove('active');
+    });
+
+    // Confirm action button
+    confirmActionBtn.addEventListener('click', () => {
+        updateStatus(currentRequestId, currentAction);
+        closeModal();
+    });
+}
+
+async function fetchRequests() {
+    try {
+        const response = await fetchWithRetry(ASSET_API);
+        allRequests = await response.json();
+        console.log('Fetched requests:', allRequests);
+        displayRequests();
+    } catch (err) {
+        console.error('Fetch error:', err.message);
+        showToast('Error loading requests. Please try again.', 'error');
+        requestsContainer.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; color: var(--danger); padding: 20px;">
+                    <i class="fas fa-exclamation-triangle"></i> Error loading requests
+                </td>
+            </tr>
+        `;
+    }
+}
+
+async function fetchWithRetry(url, options = {}, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response;
+        } catch (err) {
+            if (i < retries - 1) {
+                await new Promise(resolve => setTimeout(resolve, delay));
+                continue;
             }
+            throw err;
+        }
+    }
+}
 
-            // Check server health
-            async function checkServerHealth() {
-                try {
-                    const response = await fetchWithRetry('http://localhost:3000/health', {}, 3, 1000);
-                    await response.json();
-                    return true;
-                } catch (err) {
-                    console.error('Server health check failed:', err.message);
-                    return false;
-                }
-            }
+function truncateText(text, maxLength = 30) {
+    if (!text) return 'N/A';
+    return text.length > maxLength ? text.substring(0, maxLength - 3) + '...' : text;
+}
 
-            // Update request status
-            async function updateStatus(id, status) {
-                if (!confirm(`${status} this request?`)) {
-                    return;
-                }
-                try {
-                    const healthOk = await checkServerHealth();
-                    if (!healthOk) {
-                        throw new Error('Server is not responding on http://localhost:3000.');
-                    }
-                    const response = await fetchWithRetry(`http://localhost:3000/api/requests/${id}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ status })
-                    });
-                    await response.json();
-                    alert(`Request ${status} successfully!`);
-                    displayRequests();
-                } catch (err) {
-                    console.error('Update error:', err.message);
-                    alert(`Error: ${err.message}`);
-                }
-            }
+function displayRequests() {
+    const statusFilterValue = statusFilter.value;
+    const assetTypeFilterValue = assetTypeFilter.value;
+    const searchQuery = searchInput.value.toLowerCase();
 
-            // Fetch and display requests
-            async function displayRequests() {
-                try {
-                    const healthOk = await checkServerHealth();
-                    if (!healthOk) {
-                        throw new Error('Server is not responding on http://localhost:3000.');
-                    }
-                    const response = await fetchWithRetry('http://localhost:3000/api/requests');
-                    const requests = await response.json();
-                    const container = document.getElementById('requests-container');
-                    container.innerHTML = '';
-                    if (requests.length === 0) {
-                        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #666;">No requests found</p>';
-                        return;
-                    }
-                    requests.forEach(request => {
-                        const statusClass = getStatusClass(request.status);
-                        const card = document.createElement('div');
-                        card.classList.add('request-card');
-                        card.innerHTML = `
-                            <div class="request-header">
-                                <h3 class="request-title">${request.asset_type}</h3>
-                                <span class="request-status ${statusClass}">${request.status}</span>
-                            </div>
-                            <div class="asset-info">
-                                <i class="fas fa-id-badge"></i>
-                                <div class="asset-detail">
-                                    <span class="asset-label">Employee ID</span>
-                                    <span class="asset-value">${request.employee_id}</span>
-                                </div>
-                            </div>
-                            <div class="asset-info">
-                                <i class="fas fa-user"></i>
-                                <div class="asset-detail">
-                                    <span class="asset-label">Employee</span>
-                                    <span class="asset-value">${request.employee_name}</span>
-                                </div>
-                            </div>
-                            <div class="asset-info">
-                                <i class="fas fa-envelope"></i>
-                                <div class="asset-detail">
-                                    <span class="asset-label">Email</span>
-                                    <span class="asset-value">${request.email}</span>
-                                </div>
-                            </div>
-                            <div class="asset-info">
-                                <i class="fas fa-laptop"></i>
-                                <div class="asset-detail">
-                                    <span class="asset-label">Asset</span>
-                                    <span class="asset-value">${request.asset_name}</span>
-                                </div>
-                            </div>
-                            <div class="asset-info">
-                                <i class="fas fa-info-circle"></i>
-                                <div class="asset-detail">
-                                    <span class="asset-label">Details</span>
-                                    <span class="asset-value">${request.details}</span>
-                                </div>
-                            </div>
-                            <div class="asset-info">
-                                <i class="fas fa-calendar-alt"></i>
-                                <div class="asset-detail">
-                                    <span class="asset-label">Request Date</span>
-                                    <span class="asset-value">${request.request_date}</span>
-                                </div>
-                            </div>
-                            ${request.status === 'Pending' ? `
-                            <div class="action-buttons">
-                                <button class="btn btn-approve" data-id="${request.id}" data-status="Approved">Approve</button>
-                                <button class="btn btn-reject" data-id="${request.id}" data-status="Rejected">Reject</button>
-                            </div>
-                            ` : ''}
-                        `;
-                        container.appendChild(card);
-                    });
+    const filteredRequests = allRequests.filter(req => {
+        const matchesStatus = !statusFilterValue || req.status === statusFilterValue;
+        const matchesAssetType = !assetTypeFilterValue || req.asset_type === assetTypeFilterValue;
+        const matchesSearch = !searchQuery ||
+            (req.id && req.id.toString().includes(searchQuery)) ||
+            (req.employee_id && req.employee_id.toLowerCase().includes(searchQuery)) ||
+            (req.employee_name && req.employee_name.toLowerCase().includes(searchQuery)) ||
+            (req.asset_type && req.asset_type.toLowerCase().includes(searchQuery));
+        return matchesStatus && matchesAssetType && matchesSearch;
+    });
 
-                    // Attach event listeners to buttons
-                    document.querySelectorAll('.btn-approve').forEach(button => {
-                        button.addEventListener('click', () => {
-                            const id = button.getAttribute('data-id');
-                            const status = button.getAttribute('data-status');
-                            updateStatus(id, status);
-                        });
-                    });
-                    document.querySelectorAll('.btn-reject').forEach(button => {
-                        button.addEventListener('click', () => {
-                            const id = button.getAttribute('data-id');
-                            const status = button.getAttribute('data-status');
-                            updateStatus(id, status);
-                        });
-                    });
-                } catch (err) {
-                    console.error('Fetch error:', err.message);
-                    document.getElementById('requests-container').innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #666;">Error: ${err.message}</p>`;
-                }
-            }
+    // Pagination
+    const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+    renderPagination(totalPages);
 
-            function getStatusClass(status) {
-                switch (status.toLowerCase()) {
-                    case 'pending': return 'status-pending';
-                    case 'approved': return 'status-approved';
-                    case 'rejected': return 'status-rejected';
-                    default: return '';
-                }
-            }
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedRequests = filteredRequests.slice(startIndex, startIndex + itemsPerPage);
 
-            // Initial load and periodic refresh
-            setTimeout(displayRequests, 150);
-            setInterval(displayRequests, 30000); // Refresh every 30 seconds
+    requestsContainer.innerHTML = '';
+
+    if (paginatedRequests.length === 0) {
+        requestsContainer.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; color: var(--gray); padding: 20px;">
+                    No requests found matching your criteria
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    paginatedRequests.forEach(request => {
+        const statusClass = getStatusClass(request.status);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${request.id || 'N/A'}</td>
+            <td class="truncate" title="${request.employee_name || 'N/A'}">${truncateText(request.employee_name)}</td>
+            <td>${request.employee_id || 'N/A'}</td>
+            <td>${request.asset_type || 'N/A'}</td>
+            <td>${formatDate(request.request_date) || 'N/A'}</td>
+            <td><span class="status-badge ${statusClass}">${request.status || 'N/A'}</span></td>
+            <td>
+                <button class="action-btn btn-view" data-request-id="${request.id}">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                ${request.status === 'Pending' ? `
+                <button class="action-btn btn-approve" data-request-id="${request.id}" data-action="Approved">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="action-btn btn-reject" data-request-id="${request.id}" data-action="Rejected">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+                ` : ''}
+            </td>
+        `;
+        requestsContainer.appendChild(row);
+    });
+
+    // Add event listeners to dynamically created buttons
+    document.querySelectorAll('.btn-view').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const requestId = btn.getAttribute('data-request-id');
+            console.log('View button clicked for request ID:', requestId);
+            showRequestDetails(requestId);
         });
+    });
+
+    document.querySelectorAll('.btn-approve, .btn-reject').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const requestId = btn.getAttribute('data-request-id');
+            const action = btn.getAttribute('data-action');
+            console.log(`${action} button clicked for request ID:`, requestId);
+            showConfirmationModal(requestId, action);
+        });
+    });
+}
+
+function renderPagination(totalPages) {
+    pagination.innerHTML = '';
+    
+    if (totalPages <= 1) return;
+    
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'page-btn';
+    prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayRequests();
+        }
+    });
+    pagination.appendChild(prevBtn);
+    
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.addEventListener('click', () => {
+            currentPage = i;
+            displayRequests();
+        });
+        pagination.appendChild(pageBtn);
+    }
+    
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'page-btn';
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayRequests();
+        }
+    });
+    pagination.appendChild(nextBtn);
+}
+
+function showRequestDetails(requestId) {
+    const request = allRequests.find(req => req.id == requestId);
+    if (!request) {
+        console.error('Request not found for ID:', requestId);
+        showToast('Request not found.', 'error');
+        return;
+    }
+    
+    console.log('Showing details for request:', request);
+    viewModalBody.innerHTML = `
+        <div class="detail-row">
+            <div class="detail-label">Request ID:</div>
+            <div class="detail-value">${request.id || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Employee Name:</div>
+            <div class="detail-value">${request.employee_name || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Employee ID:</div>
+            <div class="detail-value">${request.employee_id || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Email:</div>
+            <div class="detail-value">${request.email || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Department:</div>
+            <div class="detail-value">${request.department || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Asset Type:</div>
+            <div class="detail-value">${request.asset_type || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Asset Name:</div>
+            <div class="detail-value">${request.asset_name || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Request Date:</div>
+            <div class="detail-value">${formatDate(request.request_date) || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Status:</div>
+            <div class="detail-value"><span class="status-badge ${getStatusClass(request.status)}">${request.status || 'N/A'}</span></div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Details:</div>
+            <div class="detail-value">${request.details || 'N/A'}</div>
+        </div>
+        ${request.notes ? `
+        <div class="detail-row">
+            <div class="detail-label">Admin Notes:</div>
+            <div class="detail-value">${request.notes}</div>
+        </div>
+        ` : ''}
+    `;
+    
+    // Add approve/reject buttons if status is pending
+    viewModalActions.innerHTML = '';
+    if (request.status === 'Pending') {
+        viewModalActions.innerHTML = `
+            <button class="btn btn-approve" data-request-id="${request.id}" data-action="Approved">
+                <i class="fas fa-check"></i> Approve
+            </button>
+            <button class="btn btn-reject" data-request-id="${request.id}" data-action="Rejected">
+                <i class="fas fa-times"></i> Reject
+            </button>
+        `;
+        // Add event listeners to modal action buttons
+        viewModalActions.querySelectorAll('.btn-approve, .btn-reject').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const requestId = btn.getAttribute('data-request-id');
+                const action = btn.getAttribute('data-action');
+                console.log(`${action} button clicked in view modal for request ID:`, requestId);
+                showConfirmationModal(requestId, action);
+            });
+        });
+    }
+    
+    viewModal.classList.add('active');
+}
+
+function showConfirmationModal(requestId, action) {
+    currentRequestId = requestId;
+    currentAction = action;
+
+    // Customize modal based on action
+    if (action === 'Approved') {
+        modalTitle.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> Confirm Approval`;
+        modalMessage.textContent = `Are you sure you want to approve this request?`;
+        confirmActionBtn.className = 'btn btn-approve';
+        confirmActionBtn.innerHTML = `<i class="fas fa-check"></i> Approve`;
+    } else {
+        modalTitle.innerHTML = `<i class="fas fa-times-circle" style="color: var(--danger);"></i> Confirm Rejection`;
+        modalMessage.textContent = `Are you sure you want to reject this request?`;
+        confirmActionBtn.className = 'btn btn-reject';
+        confirmActionBtn.innerHTML = `<i class="fas fa-times"></i> Reject`;
+    }
+
+    confirmationModal.classList.add('active');
+}
+
+function closeModal() {
+    confirmationModal.classList.remove('active');
+    viewModal.classList.remove('active');
+}
+
+async function updateStatus(id, status) {
+    try {
+        const response = await fetchWithRetry(`${ASSET_API}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status })
+        });
+        const updatedRequest = await response.json();
+        
+        // Update the local data
+        const index = allRequests.findIndex(req => req.id == id);
+        if (index !== -1) {
+            allRequests[index] = updatedRequest;
+        }
+        
+        // Show success toast
+        showToast(
+            `Request ${status.toLowerCase()} successfully!`,
+            status === 'Approved' ? 'success' : 'error'
+        );
+        
+        // Refresh requests display
+        displayRequests();
+        
+        // Close view modal if open
+        viewModal.classList.remove('active');
+    } catch (err) {
+        console.error('Update error:', err.message);
+        showToast('Error updating request. Please try again.', 'error');
+    }
+}
+
+function showToast(message, type) {
+    toast.className = `toast toast-${type}`;
+    toastMessage.textContent = message;
+    
+    if (type === 'success') {
+        toast.innerHTML = `<i class="fas fa-check-circle"></i> <span id="toastMessage">${message}</span>`;
+    } else {
+        toast.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span id="toastMessage">${message}</span>`;
+    }
+    
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 5000);
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+}
+
+function getStatusClass(status) {
+    if (!status) return '';
+    switch (status.toLowerCase()) {
+        case 'pending': return 'status-pending';
+        case 'approved': return 'status-approved';
+        case 'rejected': return 'status-rejected';
+        default: return '';
+    }
+}
+
+// Auto-refresh every 30 seconds
+setInterval(fetchRequests, 30000);
     </script>
 </body>
 </html>
