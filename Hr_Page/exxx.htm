@@ -43,8 +43,8 @@
             position: relative;
             text-align: center;
             height: 140px;
-            background: linear-gradient(rgb(10, 10, 255),rgb(203, 11, 242));
-            color: #ffffff;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #f8f9fa;
             border-radius: 16px;
             overflow: hidden;
             display: flex;
@@ -190,14 +190,12 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 15px;
             text-align: left;
             border-bottom: 1px solid #eee;
-            vertical-align: middle;
         }
 
         th {
@@ -206,11 +204,6 @@
             color: var(--dark);
             position: sticky;
             top: 0;
-            text-align: left;
-        }
-
-        td {
-            text-align: left;
         }
 
         tr:hover {
@@ -242,7 +235,7 @@
         }
 
         .action-btn {
-            padding: 8px 12px;
+            padding: 6px 12px;
             border-radius: var(--border-radius);
             font-weight: 500;
             cursor: pointer;
@@ -250,12 +243,9 @@
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 6px;
             font-size: 0.85rem;
-            margin: 4px 0;
-            width: 100%;
-            max-width: 120px;
+            margin-right: 5px;
         }
 
         .btn-view {
@@ -289,16 +279,9 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 150px;
+            display: inline-block;
         }
-
-        /* Column Widths */
-        th:nth-child(1), td:nth-child(1) { width: 10%; } /* Request ID */
-        th:nth-child(2), td:nth-child(2) { width: 15%; } /* Employee */
-        th:nth-child(3), td:nth-child(3) { width: 15%; } /* Employee ID */
-        th:nth-child(4), td:nth-child(4) { width: 15%; } /* Asset Type */
-        th:nth-child(5), td:nth-child(5) { width: 15%; } /* Request Date */
-        th:nth-child(6), td:nth-child(6) { width: 10%; } /* Status */
-        th:nth-child(7), td:nth-child(7) { width: 20%; } /* Actions */
 
         /* Modal Styles */
         .modal-overlay {
@@ -356,6 +339,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
         }
 
         .modal-body {
@@ -502,9 +493,8 @@
             }
 
             .action-btn {
-                padding: 6px 10px;
+                padding: 4px 8px;
                 font-size: 0.8rem;
-                max-width: 100px;
             }
 
             .detail-row {
@@ -515,15 +505,6 @@
                 margin-bottom: 5px;
                 min-width: auto;
             }
-
-            /* Adjust column widths for mobile */
-            th:nth-child(1), td:nth-child(1) { width: 15%; }
-            th:nth-child(2), td:nth-child(2) { width: 20%; }
-            th:nth-child(3), td:nth-child(3) { width: 20%; }
-            th:nth-child(4), td:nth-child(4) { width: 20%; }
-            th:nth-child(5), td:nth-child(5) { width: 15%; }
-            th:nth-child(6), td:nth-child(6) { width: 10%; }
-            th:nth-child(7), td:nth-child(7) { width: 20%; }
         }
 
         @media (max-width: 480px) {
@@ -535,26 +516,6 @@
                 width: 100%;
                 justify-content: center;
             }
-
-            /* Stack action buttons vertically on very small screens */
-            td:nth-child(7) .action-btn {
-                display: block;
-                width: 100%;
-                margin: 4px 0;
-            }
-
-            /* Hide some columns on very small screens */
-            th:nth-child(3), td:nth-child(3),
-            th:nth-child(5), td:nth-child(5) {
-                display: none;
-            }
-        }
-
-        .request-id-row {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            font-weight: 600;
         }
     </style>
 </head>
@@ -610,8 +571,8 @@
                             <tr>
                                 <th>Request ID</th>
                                 <th>Employee</th>
-                                <th>Employee ID</th>
                                 <th>Asset Type</th>
+                                <th>Asset Name</th>
                                 <th>Request Date</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -637,7 +598,7 @@
                     <i class="fas fa-file-alt"></i>
                     Request Details
                 </h3>
-                <button class="btn btn-cancel close-view-modal">Close</button>
+                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body" id="viewModalBody">
                 <!-- Details will be loaded here -->
@@ -646,6 +607,7 @@
                 <div class="modal-actions" id="viewModalActions">
                     <!-- Approve/Reject buttons will be added here for pending requests -->
                 </div>
+                <button class="btn btn-cancel close-view-modal">Close</button>
             </div>
         </div>
     </div>
@@ -658,13 +620,13 @@
                     <i class="fas fa-question-circle"></i>
                     Confirm Action
                 </h3>
-                <button class="btn btn-cancel modal-close">Close</button>
+                <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <p class="modal-message" id="modalMessage">Are you sure you want to perform this action?</p>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-cancel modal-close">Cancel</button>
+                <button class="btn btn-cancel">Cancel</button>
                 <button class="btn" id="confirmActionBtn">Confirm</button>
             </div>
         </div>
@@ -677,7 +639,7 @@
     </div>
 
     <script>
-      const ASSET_API = 'http://16.170.224.87:3086/api/requests';
+      const ASSET_API = 'http://16.171.140.12:3086/api/requests';
 let currentRequestId = null;
 let currentAction = null;
 let currentPage = 1;
@@ -692,7 +654,7 @@ const viewModalActions = document.getElementById('viewModalActions');
 const modalTitle = document.getElementById('modalTitle');
 const modalMessage = document.getElementById('modalMessage');
 const confirmActionBtn = document.getElementById('confirmActionBtn');
-const modalCloseButtons = document.querySelectorAll('.modal-close');
+const modalCloseButtons = document.querySelectorAll('.modal-close, .btn-cancel');
 const closeViewModalBtn = document.querySelector('.close-view-modal');
 const toast = document.getElementById('toast');
 const toastMessage = document.getElementById('toastMessage');
@@ -824,15 +786,21 @@ function displayRequests() {
             <td>${request.id || 'N/A'}</td>
             <td class="truncate" title="${request.employee_name || 'N/A'}">${truncateText(request.employee_name)}</td>
             <td>${request.employee_id || 'N/A'}</td>
-            <td class="truncate" title="${request.asset_type || 'N/A'}">${truncateText(request.asset_type)}</td>
+            <td>${request.asset_type || 'N/A'}</td>
             <td>${formatDate(request.request_date) || 'N/A'}</td>
             <td><span class="status-badge ${statusClass}">${request.status || 'N/A'}</span></td>
             <td>
-                <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                    <button class="action-btn btn-view" data-request-id="${request.id}">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                </div>
+                <button class="action-btn btn-view" data-request-id="${request.id}">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                ${request.status === 'Pending' ? `
+                <button class="action-btn btn-approve" data-request-id="${request.id}" data-action="Approved">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+                <button class="action-btn btn-reject" data-request-id="${request.id}" data-action="Rejected">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+                ` : ''}
             </td>
         `;
         requestsContainer.appendChild(row);
@@ -844,6 +812,15 @@ function displayRequests() {
             const requestId = btn.getAttribute('data-request-id');
             console.log('View button clicked for request ID:', requestId);
             showRequestDetails(requestId);
+        });
+    });
+
+    document.querySelectorAll('.btn-approve, .btn-reject').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const requestId = btn.getAttribute('data-request-id');
+            const action = btn.getAttribute('data-action');
+            console.log(`${action} button clicked for request ID:`, requestId);
+            showConfirmationModal(requestId, action);
         });
     });
 }
@@ -899,7 +876,10 @@ function showRequestDetails(requestId) {
     
     console.log('Showing details for request:', request);
     viewModalBody.innerHTML = `
-        <div class="request-id-row">Request ID: ${request.id || 'N/A'}</div>
+        <div class="detail-row">
+            <div class="detail-label">Request ID:</div>
+            <div class="detail-value">${request.id || 'N/A'}</div>
+        </div>
         <div class="detail-row">
             <div class="detail-label">Employee Name:</div>
             <div class="detail-value">${request.employee_name || 'N/A'}</div>
@@ -911,6 +891,10 @@ function showRequestDetails(requestId) {
         <div class="detail-row">
             <div class="detail-label">Email:</div>
             <div class="detail-value">${request.email || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Department:</div>
+            <div class="detail-value">${request.department || 'N/A'}</div>
         </div>
         <div class="detail-row">
             <div class="detail-label">Asset Type:</div>
@@ -940,7 +924,7 @@ function showRequestDetails(requestId) {
         ` : ''}
     `;
     
-    // Show actions in modal for pending requests
+    // Add approve/reject buttons if status is pending
     viewModalActions.innerHTML = '';
     if (request.status === 'Pending') {
         viewModalActions.innerHTML = `

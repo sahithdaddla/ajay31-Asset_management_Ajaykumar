@@ -554,124 +554,126 @@
     </style>
 </head>
 <body>
-    <header>
-        <div class="banner-background">
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-        </div>
-        <h1>Employee Asset Request</h1>
-        <p>Submit and track your asset requests</p>
-    </header>
+    
+         <header>
+            <div class="banner-background">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+            </div>
+            <h1>Employee Asset Request</h1>
+            <p>Submit and track your asset requests</p>
+        </header>
 
-    <div class="main-content">
-        <div class="form-container">
-            <h2><i class="fas fa-plus-circle"></i> Request New Asset</h2>
-            <form id="asset-request-form">
-                <div class="form-group">
-                    <label for="employeeId" class="form-label">Employee ID</label>
-                    <input type="text" id="employeeId" class="form-control" placeholder="e.g., ATS0123" maxlength="7">
-                    <span class="error-message" id="employeeIdError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Employee ID must be ATS0 followed by 3 digits (001-999)
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="employeeName" class="form-label">Employee Name</label>
-                    <input type="text" id="employeeName" class="form-control" placeholder="Employee Name" maxlength="100">
-                    <span class="error-message" id="employeeNameError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Name must be 3-100 alphabets only, no spaces at start/end or consecutive spaces
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="emp-email" class="form-label">Email Address</label>
-                    <input type="email" id="emp-email" class="form-control" placeholder="example@astrolitetech.com">
-                    <span class="error-message" id="empEmailError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Email must be valid @astrolitetech.com address (3-30 chars before @)
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="request-date" class="form-label">Date of Request</label>
-                    <input type="date" id="request-date" class="form-control">
-                    <span class="error-message" id="requestDateError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Date must be today or within next 6 months
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="asset-type" class="form-label">Asset Type</label>
-                    <select id="asset-type" class="form-control">
-                        <option value="" disabled selected>Select Asset Type</option>
-                        <option value="Laptop">Laptop</option>
-                        <option value="Office Supplies">Office Supplies</option>
-                        <option value="Training Program">Training Program</option>
-                        <option value="Project">Project</option>
-                        <option value="Bonus">Bonus</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <span class="error-message" id="assetTypeError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Please select an asset type
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="asset-name" class="form-label">Asset Name</label>
-                    <input type="text" id="asset-name" class="form-control" placeholder="Asset Name" maxlength="30">
-                    <span class="error-message" id="assetNameError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Asset name must be 2-30 chars, no spaces at start/end or consecutive spaces
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="asset-details" class="form-label">Additional Details</label>
-                    <textarea id="asset-details" class="form-control" maxlength="1000" placeholder="Reason for asset request" rows="4"></textarea>
-                    <span class="error-message" id="assetDetailsError">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
-                        Details must be 10-1000 chars, no spaces at start/end or consecutive spaces
-                    </span>
-                </div>
-                <button type="submit" class="btn" id="submitBtn" disabled>Submit Request</button>
-            </form>
-        </div>
-
-        <div class="assets-container">
-            <section class="section" id="requestedAssetsSection">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-file-alt"></i> Requested Assets</h2>
-                </div>
-                <div class="card-grid" id="requestedAssetsContainer">
-                    <div class="no-data">
-                        <i class="fas fa-box-open"></i>
-                        <p>Please enter your Employee ID to view your requests</p>
+        <div class="main-content">
+            <div class="form-container">
+                <h2><i class="fas fa-plus-circle"></i> Request New Asset</h2>
+                <form id="asset-request-form">
+                    <div class="form-group">
+                        <label for="employeeId" class="form-label">Employee ID</label>
+                        <input type="text" id="employeeId" class="form-control" placeholder="e.g., ATS0123" maxlength="7">
+                        <span class="error-message" id="employeeIdError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Employee ID must be ATS0 followed by 3 digits (001-999)
+                        </span>
                     </div>
-                </div>
-            </section>
-
-            <section class="section" id="allocatedAssetsSection">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-laptop"></i> Allocated Assets</h2>
-                </div>
-                <div class="card-grid" id="allocatedAssetsContainer">
-                    <div class="no-data">
-                        <i class="fas fa-box-open"></i>
-                        <p>Please enter your Employee ID to view your allocations</p>
+                    <div class="form-group">
+                        <label for="employeeName" class="form-label">Employee Name</label>
+                        <input type="text" id="employeeName" class="form-control" placeholder="Employee Name" maxlength="100">
+                        <span class="error-message" id="employeeNameError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Name must be 3-100 alphabets only, no spaces at start/end or consecutive spaces
+                        </span>
                     </div>
-                </div>
-            </section>
-
-            <section class="section" id="rejectedAssetsSection">
-                <div class="section-header">
-                    <h2 class="section-title"><i class="fas fa-times-circle"></i> Rejected Requests</h2>
-                </div>
-                <div class="card-grid" id="rejectedAssetsContainer">
-                    <div class="no-data">
-                        <i class="fas fa-box-open"></i>
-                        <p>Please enter your Employee ID to view rejected requests</p>
+                    <div class="form-group">
+                        <label for="emp-email" class="form-label">Email Address</label>
+                        <input type="email" id="emp-email" class="form-control" placeholder="example@gmail.com">
+                        <span class="error-message" id="empEmailError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Email must be valid @gmail.com address (3-30 chars before @)
+                        </span>
                     </div>
-                </div>
-            </section>
+                    <div class="form-group">
+                        <label for="request-date" class="form-label">Date of Request</label>
+                        <input type="date" id="request-date" class="form-control">
+                        <span class="error-message" id="requestDateError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Date must be today or within next 6 months
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-type" class="form-label">Asset Type</label>
+                        <select id="asset-type" class="form-control">
+                            <option value="" disabled selected>Select Asset Type</option>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                            <option value="Training Program">Training Program</option>
+                            <option value="Project">Project</option>
+                            <option value="Bonus">Bonus</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <span class="error-message" id="assetTypeError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Please select an asset type
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-name" class="form-label">Asset Name</label>
+                        <input type="text" id="asset-name" class="form-control" placeholder="Asset Name" maxlength="30">
+                        <span class="error-message" id="assetNameError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Asset name must be 2-30 chars, no spaces at start/end or consecutive spaces
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="asset-details" class="form-label">Additional Details</label>
+                        <textarea id="asset-details" class="form-control" maxlength="1000" placeholder="Reason fot asset request" rows="4"></textarea>
+                        <span class="error-message" id="assetDetailsError">
+                            <i class="fas fa-exclamation-circle error-icon"></i>
+                            Details must be 10-1000 chars, no spaces at start/end or consecutive spaces
+                        </span>
+                    </div>
+                    <button type="submit" class="btn" id="submitBtn" disabled>Submit Request</button>
+                </form>
+            </div>
+
+            <div class="assets-container">
+                <section class="section" id="requestedAssetsSection">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-file-alt"></i> Requested Assets</h2>
+                    </div>
+                    <div class="card-grid" id="requestedAssetsContainer">
+                        <div class="no-data">
+                            <i class="fas fa-box-open"></i>
+                            <p>Please enter your Employee ID to view your requests</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" id="allocatedAssetsSection">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-laptop"></i> Allocated Assets</h2>
+                    </div>
+                    <div class="card-grid" id="allocatedAssetsContainer">
+                        <div class="no-data">
+                            <i class="fas fa-box-open"></i>
+                            <p>Please enter your Employee ID to view your allocations</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section" id="rejectedAssetsSection">
+                    <div class="section-header">
+                        <h2 class="section-title"><i class="fas fa-times-circle"></i> Rejected Requests</h2>
+                    </div>
+                    <div class="card-grid" id="rejectedAssetsContainer">
+                        <div class="no-data">
+                            <i class="fas fa-box-open"></i>
+                            <p>Please enter your Employee ID to view rejected requests</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -751,7 +753,7 @@
     </div>
 
     <script>
-        const ASSET_API = 'http://16.170.224.87:3086/api/requests';
+        const ASSET_API = 'http://16.171.140.12:3086/api/requests';
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
@@ -780,7 +782,7 @@
 
         function validateEmail(email) {
             const trimmed = email.trim();
-            const regex = /^[a-zA-Z0-9][a-zA-Z0-9\-_\.]{1,28}[a-zA-Z0-9]@astrolitetech\.com$/;
+            const regex = /^[a-zA-Z0-9][a-zA-Z0-9\-_\.]{1,28}[a-zA-Z0-9]@gmail\.com$/;
             return regex.test(trimmed) && 
                    trimmed.length >= 5 && 
                    trimmed.length <= 40 && 
@@ -845,6 +847,11 @@
 
         // Validate single field
         function validateField(fieldId, value) {
+            // Don't show error for empty fields before user starts typing
+            if (!value && !document.getElementById(fieldId)?.classList.contains('invalid')) {
+                return false;
+            }
+
             let isValid = false;
             let errorMessage = '';
             
@@ -859,7 +866,7 @@
                     break;
                 case 'emp-email':
                     isValid = validateEmail(value);
-                    errorMessage = 'Email must be valid @astrolitetech.com address (3-30 chars before @)';
+                    errorMessage = 'Email must be valid @gmail.com address (3-30 chars before @)';
                     break;
                 case 'request-date':
                     isValid = validateRequestDate(value);
@@ -886,12 +893,16 @@
             const error = document.getElementById(errorId);
             
             if (input) {
-                input.classList.toggle('invalid', !isValid && value);
+                if (value) {
+                    input.classList.toggle('invalid', !isValid);
+                } else {
+                    input.classList.remove('invalid');
+                }
             }
             
             if (error) {
-                error.innerHTML = `<i class="fas fa-exclamation-circle error-icon"></i>${errorMessage}`;
                 error.classList.toggle('show', !isValid && value);
+                error.textContent = errorMessage;
             }
             
             return isValid;
